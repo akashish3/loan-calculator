@@ -1,42 +1,129 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Loan Calculator</title>
-    <link rel="stylesheet" href="style1.css">
+  <meta charset="UTF-8">
+  <title>Loan Calculator</title>
+  <link rel="stylesheet" href="style1.css">
+  <style>
+    /* style1.css content */
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+
+    .box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      color: #444;
+      text-align: left;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    #monthlyPayment {
+      background: #f9f9f9;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="box">
-        <h1>Loan Calculator</h1>
-        <label for="loanAmount">Loan Amount ($):</label>
-        <input type="number" id="loanAmount" min="0" value="10000" placeholder="Enter Amount">
-        <br>
-        <label for="interestRate">Interest Rate (%):</label>
-        <input type="number" id="interestRate" min="0" value="10" placeholder="Enter Intrest Rate">
-        <br>
-        <label for="monthsToPay">Months to Pay:</label>
-        <input type="number" id="monthsToPay" min="1" value="12"placeholder="Enter Months">
-        <br>
-        <button onclick="calculatePayment()">Calculate</button>
-        <br> <br>
-        <label for="monthlyPayment">Monthly Payment:</label>
-        <input type="text" id="monthlyPayment" readonly>
+  <div class="container">
+    <div class="box">
+      <h1>Loan Calculator</h1>
+
+      <label for="loanAmount">Loan Amount ($):</label>
+      <input type="number" id="loanAmount" min="0" step="0.01" value="10000" placeholder="Enter Amount">
+
+      <label for="interestRate">Interest Rate (%):</label>
+      <input type="number" id="interestRate" min="0" step="0.01" value="10" placeholder="Enter Interest Rate">
+
+      <label for="monthsToPay">Months to Pay:</label>
+      <input type="number" id="monthsToPay" min="1" value="12" placeholder="Enter Months">
+
+      <button onclick="calculatePayment()">Calculate</button>
+
+      <label for="monthlyPayment">Monthly Payment:</label>
+      <input type="text" id="monthlyPayment" readonly>
     </div>
-</div>
+  </div>
 
-    <script>
-        function calculatePayment() {
-    // Get input values
-    const loanAmount = parseFloat(document.getElementById("loanAmount").value);
-    const interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
-    const monthsToPay = parseInt(document.getElementById("monthsToPay").value);
+  <script>
+    function calculatePayment() {
+      const loanAmount = parseFloat(document.getElementById("loanAmount").value);
+      const annualRate = parseFloat(document.getElementById("interestRate").value);
+      const monthsToPay = parseInt(document.getElementById("monthsToPay").value);
 
-    // Calculate monthly payment using the formula
-    const monthlyPayment = (loanAmount * interestRate * Math.pow(1 + interestRate, monthsToPay)) / (Math.pow(1 + interestRate, monthsToPay) - 1);
+      if (isNaN(loanAmount) || isNaN(annualRate) || isNaN(monthsToPay)) {
+        alert("Please enter valid numbers");
+        return;
+      }
 
-    // Display the result
-    document.getElementById("monthlyPayment").value = monthlyPayment.toFixed(2);
-}
-    </script>
+      const monthlyRate = annualRate / 100 / 12;
+      let monthlyPayment;
+
+      if (monthlyRate === 0) {
+        monthlyPayment = loanAmount / monthsToPay;
+      } else {
+        monthlyPayment =
+          (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, monthsToPay)) /
+          (Math.pow(1 + monthlyRate, monthsToPay) - 1);
+      }
+
+      document.getElementById("monthlyPayment").value = monthlyPayment.toFixed(2);
+    }
+  </script>
 </body>
 </html>
