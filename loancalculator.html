@@ -3,9 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Loan Calculator</title>
-  <link rel="stylesheet" href="style1.css">
   <style>
-    /* style1.css content */
     body {
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
@@ -29,7 +27,7 @@
       padding: 30px;
       border-radius: 12px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-      max-width: 400px;
+      max-width: 420px;
       width: 100%;
       text-align: center;
     }
@@ -72,10 +70,18 @@
       background: #45a049;
     }
 
-    #monthlyPayment {
+    .results {
+      margin-top: 20px;
+      padding: 15px;
       background: #f9f9f9;
-      font-weight: bold;
-      color: #333;
+      border-radius: 8px;
+      text-align: left;
+    }
+
+    .results p {
+      margin: 8px 0;
+      font-size: 16px;
+      color: #222;
     }
   </style>
 </head>
@@ -94,9 +100,13 @@
       <input type="number" id="monthsToPay" min="1" value="12" placeholder="Enter Months">
 
       <button onclick="calculatePayment()">Calculate</button>
+      <button onclick="resetForm()" style="background:#f44336; margin-left:10px;">Reset</button>
 
-      <label for="monthlyPayment">Monthly Payment:</label>
-      <input type="text" id="monthlyPayment" readonly>
+      <div class="results" id="resultsBox" style="display:none;">
+        <p id="monthly"></p>
+        <p id="total"></p>
+        <p id="interest"></p>
+      </div>
     </div>
   </div>
 
@@ -122,7 +132,26 @@
           (Math.pow(1 + monthlyRate, monthsToPay) - 1);
       }
 
-      document.getElementById("monthlyPayment").value = monthlyPayment.toFixed(2);
+      const totalPayment = monthlyPayment * monthsToPay;
+      const totalInterest = totalPayment - loanAmount;
+
+      const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      });
+
+      document.getElementById("monthly").innerText = "Monthly Payment: " + formatter.format(monthlyPayment);
+      document.getElementById("total").innerText = "Total Payment: " + formatter.format(totalPayment);
+      document.getElementById("interest").innerText = "Total Interest: " + formatter.format(totalInterest);
+
+      document.getElementById("resultsBox").style.display = "block";
+    }
+
+    function resetForm() {
+      document.getElementById("loanAmount").value = "";
+      document.getElementById("interestRate").value = "";
+      document.getElementById("monthsToPay").value = "";
+      document.getElementById("resultsBox").style.display = "none";
     }
   </script>
 </body>
